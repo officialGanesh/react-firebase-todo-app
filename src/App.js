@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react"
 import colRef from "./firebase-config"
-import { addDoc, getDocs } from "firebase/firestore"
+import { addDoc, query, onSnapshot, orderBy, serverTimestamp } from "firebase/firestore"
 import Todos from "./Todos"
 
 
@@ -13,15 +13,16 @@ function App() {
     
   // Add todo to the db
   const addTodo = async (todo) => {
-    await addDoc(colRef, {todo:todo})
+    await addDoc(colRef, {todo:todo, createdAt: serverTimestamp()})
   }
 
   // Read todos from db
   useEffect(() => {
     const getTodos = async () => {
-        
-          const data = await getDocs(colRef)
-          setTodos(data.docs.map(doc => ({...doc.data()})))
+
+      const q = query(colRef,orderBy("createdAt"))
+          onSnapshot(q, (snapshot)=>
+          setTodos(snapshot.docs.map((doc) => ({...doc.data()}))))
     };
 
     getTodos()
