@@ -22,7 +22,7 @@ function App() {
 
       const q = query(colRef,orderBy("createdAt"))
           onSnapshot(q, (snapshot)=>
-          setTodos(snapshot.docs.map((doc) => ({...doc.data()}))))
+          setTodos(snapshot.docs.map((doc) => ({...doc.data(),id:doc.id}))))
     };
 
     getTodos()
@@ -39,9 +39,7 @@ function App() {
     }else{
       setPlaceholderValue(`Can't add empty todo ✋`)
     }
-
-    
-    
+  
     setInput('')
   }
 
